@@ -1,0 +1,63 @@
+import { Hono } from 'hono'
+import type { Bindings } from '../utils/types'
+
+const showrooms = new Hono<{ Bindings: Bindings }>()
+
+// GET /api/showrooms - list active showrooms
+showrooms.get('/', async (c) => {
+  const { results } = await c.env.DB.prepare(
+    'SELECT id, name, address, description, image_url FROM showrooms WHERE is_active = 1 ORDER BY id ASC'
+  ).all()
+  return c.json({ showrooms: results })
+})
+
+// GET /api/showrooms/:id - showroom detail
+showrooms.get('/:id', async (c) => {
+  const id = c.req.param('id')
+  const showroom = await c.env.DB.prepare(
+    'SELECT id, name, address, description, image_url FROM showrooms WHERE id = ? AND is_active = 1'
+  )
+    .bind(id)
+    .first()
+  if (!showroom) {
+    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+  }
+  return c.json({ showroom })
+})
+
+// GET /api/showrooms/:id/slots?date=YYYY-MM-DD - available time slots
+// If no date provided, returns all future available slots grouped implicitly by date (client can group)
+showrooms.get('/:id/slots', async (c) => {
+  const id = c.req.param('id')
+  const date = c.req.query('date')
+
+  const showroom = await c.env.DB.prepare('SELECT id FROM showrooms WHERE id = ? AND is_active = 1')
+    .bind(id)
+    .first()
+  if (!showroom) {
+    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+  }
+
+  let query = `
+    SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time,
+      CASE WHEN r.id IS NULL THEN 1 ELSE 0 END AS is_available
+    FROM time_slots ts
+    LEFT JOIN reservations r ON r.time_slot_id = ts.id AND r.status = 'confirmed'
+    WHERE ts.showroom_id = ? AND ts.is_active = 1 AND ts.slot_date >= date('now')
+  `
+  const params: (string | number)[] = [id]
+
+  if (date) {
+    query += ' AND ts.slot_date = ?'
+    params.push(date)
+  }
+  query += ' ORDER BY ts.slot_date ASC, ts.start_time ASC'
+
+  const stmt = c.env.DB.prepare(query).bind(...params)
+  const { results } = await stmt.all()
+
+  const slots = (results as any[]).map((s) => ({ ...s, is_available: !!s.is_available }))
+  return c.json({ slots })
+})
+
+export default showrooms

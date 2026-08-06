@@ -1,0 +1,67 @@
+/* Brooks Showroom Reservation - custom styles */
+
+.btn-primary {
+  background-color: #171717;
+  color: white;
+  transition: background-color 0.15s ease;
+}
+.btn-primary:hover {
+  background-color: #404040;
+}
+.btn-primary:disabled {
+  background-color: #d4d4d4;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  border: 1px solid #d4d4d4;
+  background-color: white;
+  transition: all 0.15s ease;
+}
+.btn-outline:hover {
+  border-color: #171717;
+}
+
+.slot-btn {
+  transition: all 0.15s ease;
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.spinner {
+  border: 3px solid #e5e5e5;
+  border-top-color: #171717;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-confirmed { background-color: #dcfce7; color: #15803d; }
+.badge-cancelled { background-color: #f5f5f5; color: #737373; }
+.badge-admin { background-color: #fef3c7; color: #b45309; }

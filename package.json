@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "dev:sandbox": "wrangler pages dev dist --d1=brooks-showroom-production --local --ip 0.0.0.0 --port 3000",
-    "build": "vite build",
+    "build": "cd frontend && npm run build && cd .. && vite build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",

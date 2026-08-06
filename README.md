@@ -98,7 +98,9 @@
 
 ## 기술 스택
 - **백엔드**: Hono (TypeScript) on Cloudflare Workers
-- **프론트엔드**: Vanilla JS SPA (hash 라우팅) + TailwindCSS(CDN) + Axios + Day.js
+- **프론트엔드**: React 19 + Vite + TypeScript (react-router-dom HashRouter) + TailwindCSS(CDN) + Axios + Day.js
+  - `frontend/` 서브프로젝트에서 빌드 → 결과물이 루트 `public/`으로 출력되어 Hono/Cloudflare Pages 정적 자산으로 서빙됨
+  - `frontend/public/_routes.json`으로 `/api/*`만 Worker로 라우팅, 나머지는 Pages CDN이 정적 서빙
 - **데이터베이스**: Cloudflare D1 (SQLite)
 - **인증**: JWT (hono/jwt), PBKDF2 비밀번호 해싱 (Web Crypto API)
 - **배포**: Cloudflare Pages
@@ -122,5 +124,18 @@
 
 ## 배포 상태
 - **플랫폼**: Cloudflare Pages
-- **상태**: 🟡 로컬 개발 완료, 프로덕션 배포 대기
-- **마지막 업데이트**: 2026-08-06
+- **상태**: 🟡 로컬 개발 완료 (React 전환 포함), 프로덕션 배포 대기
+- **마지막 업데이트**: 2026-08-06 (Vanilla JS → React 전환)
+
+## 개발/빌드 방법 (모노레포 구조)
+```bash
+# 1. 프론트엔드 빌드 (frontend/ → 루트 public/ 으로 출력)
+cd frontend && npm run build
+
+# 2. Hono 백엔드(Worker) 빌드 (루트, public/ 을 dist/ 로 번들)
+cd .. && npm run build
+
+# 3. PM2로 실행
+pm2 restart webapp   # 또는 pm2 start ecosystem.config.cjs
+```
+> 주의: `frontend/vite.config.ts`의 `emptyOutDir: true`로 인해 frontend 빌드 시 루트 `public/`이 완전히 덮어써집니다. `_routes.json`은 `frontend/public/_routes.json`에 위치해 있어 frontend 빌드마다 자동으로 함께 복사됩니다.

@@ -197,10 +197,33 @@ admin.patch('/showrooms/:id', async (c) => {
   return c.json({ success: true })
 })
 
-// DELETE /api/admin/showrooms/:id - deactivate showroom (soft delete)
+// DELETE /api/admin/showrooms/:id - permanently delete showroom
+// Blocked if the showroom has any confirmed reservations (cancel or move them first).
 admin.delete('/showrooms/:id', async (c) => {
   const id = c.req.param('id')
-  await c.env.DB.prepare('UPDATE showrooms SET is_active = 0 WHERE id = ?').bind(id).run()
+
+  const showroom = await c.env.DB.prepare('SELECT id FROM showrooms WHERE id = ?').bind(id).first()
+  if (!showroom) {
+    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+  }
+
+  const activeReservation = await c.env.DB.prepare(
+    "SELECT id FROM reservations WHERE showroom_id = ? AND status = 'confirmed'"
+  )
+    .bind(id)
+    .first()
+  if (activeReservation) {
+    return c.json(
+      { error: '예약이 존재하는 쇼룸은 삭제할 수 없습니다. 먼저 예약을 취소하거나 비활성화해주세요.' },
+      409
+    )
+  }
+
+  // Clean up dependent rows (cancelled reservations, time slots) then the showroom itself.
+  await c.env.DB.prepare('DELETE FROM reservations WHERE showroom_id = ?').bind(id).run()
+  await c.env.DB.prepare('DELETE FROM time_slots WHERE showroom_id = ?').bind(id).run()
+  await c.env.DB.prepare('DELETE FROM showrooms WHERE id = ?').bind(id).run()
+
   return c.json({ success: true })
 })
 

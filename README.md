@@ -23,8 +23,8 @@
 
 ## URLs
 - **로컬 개발**: http://localhost:3000
-- **샌드박스 미리보기**: https://3000-i5n6jiaclyuu4d8p18uv1-5185f4aa.sandbox.novita.ai
-- **프로덕션**: (배포 후 업데이트 예정)
+- **프로덕션 (Cloudflare Pages)**: https://brooks-showroom.pages.dev
+- **GitHub**: https://github.com/linkupmediacommerce-ship-it/linkupmediacommerce
 
 ### 테스트 계정
 | 구분 | 이메일 | 비밀번호 |
@@ -123,9 +123,16 @@
 5. 프로덕션 배포 및 커스텀 도메인 연결
 
 ## 배포 상태
-- **플랫폼**: Cloudflare Pages
-- **상태**: 🟡 로컬 개발 완료 (React 전환 포함), 프로덕션 배포 대기
-- **마지막 업데이트**: 2026-08-06 (Vanilla JS → React 전환)
+- **플랫폼**: Cloudflare Pages (Workers Functions + D1)
+- **상태**: 🟢 프로덕션 배포 완료 — https://brooks-showroom.pages.dev
+- **DB**: Cloudflare D1 `brooks-showroom-production` (프로덕션 계정, 마이그레이션+시드 적용 완료)
+- **마지막 업데이트**: 2026-08-08 (React 전환 + 프로덕션 배포)
+
+### 재배포 방법 (본인 Cloudflare 계정)
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name brooks-showroom
+```
 
 ## 개발/빌드 방법 (모노레포 구조)
 ```bash

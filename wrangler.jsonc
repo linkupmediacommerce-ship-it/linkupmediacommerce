@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "brooks-showroom-production",
-      "database_id": "local-placeholder-will-be-set-on-deploy"
+      "database_id": "13a0fd57-604d-44c6-85c6-0d4bdc2b2a93"
     }
   ]
 }

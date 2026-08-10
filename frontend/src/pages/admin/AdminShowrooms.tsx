@@ -36,6 +36,17 @@ export function AdminShowrooms() {
     }
   }
 
+  async function handleDelete(s: Showroom) {
+    if (!confirm(`'${s.name}' 쇼룸을 완전히 삭제하시겠습니까?\n예약이 있는 경우 삭제할 수 없습니다.`)) return
+    try {
+      await api.delete(`/admin/showrooms/${s.id}`)
+      toast('쇼룸이 삭제되었습니다.', 'success')
+      load()
+    } catch (e) {
+      toast(apiErrorMessage(e, '삭제에 실패했습니다.'), 'error')
+    }
+  }
+
   if (error) return <p className="text-center text-red-500 py-16">{error}</p>
   if (!showrooms) return <Spinner />
 
@@ -94,6 +105,12 @@ export function AdminShowrooms() {
                   className="px-3 py-1.5 rounded-lg text-sm border border-neutral-200 bg-white hover:border-neutral-900 transition"
                 >
                   {s.is_active ? '비활성화' : '활성화'}
+                </button>
+                <button
+                  onClick={() => handleDelete(s)}
+                  className="px-3 py-1.5 rounded-lg text-sm border border-red-200 text-red-600 hover:bg-red-50 transition"
+                >
+                  삭제
                 </button>
               </div>
             </div>

@@ -101,6 +101,7 @@ export function AdminReservations() {
               <th className="px-4 py-3">일시</th>
               <th className="px-4 py-3">예약자</th>
               <th className="px-4 py-3">연락처</th>
+              <th className="px-4 py-3">메모</th>
               <th className="px-4 py-3">상태</th>
               <th className="px-4 py-3">관리</th>
             </tr>
@@ -108,7 +109,7 @@ export function AdminReservations() {
           <tbody className="divide-y divide-neutral-100">
             {reservations.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center text-neutral-400 py-12">
+                <td colSpan={7} className="text-center text-neutral-400 py-12">
                   예약 내역이 없습니다.
                 </td>
               </tr>
@@ -125,6 +126,11 @@ export function AdminReservations() {
                     <span className="text-xs text-neutral-400">{r.user_email}</span>
                   </td>
                   <td className="px-4 py-3">{r.user_phone || '-'}</td>
+                  <td className="px-4 py-3 max-w-[220px]">
+                    <span className="text-neutral-600 whitespace-pre-wrap break-words">
+                      {r.memo || <span className="text-neutral-300">-</span>}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     <Badge variant={r.status === 'confirmed' ? 'confirmed' : 'cancelled'}>
                       {r.status === 'confirmed' ? '예약확정' : '취소됨'}

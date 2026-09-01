@@ -17,9 +17,8 @@ export function Layout() {
     <div className="min-h-screen flex flex-col">
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/showrooms" className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900">
-            <span className="text-amber-600"><i className="fa-solid fa-cube" /></span>
-            BROOKS
+          <Link to="/showrooms" className="flex items-center">
+            <img src="/images/brooks-logo.png" alt="BROOKS" className="h-6 sm:h-7 w-auto" />
           </Link>
           <nav className="flex items-center gap-3 text-sm font-medium">
             <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">쇼룸 목록</Link>

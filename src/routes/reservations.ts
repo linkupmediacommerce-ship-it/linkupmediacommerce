@@ -82,7 +82,7 @@ reservations.get('/my', async (c) => {
     `
     SELECT r.id, r.status, r.memo, r.created_at,
       s.id AS showroom_id, s.name AS showroom_name, s.address AS showroom_address,
-      ts.slot_date, ts.start_time, ts.end_time
+      ts.slot_date, ts.start_time
     FROM reservations r
     JOIN showrooms s ON s.id = r.showroom_id
     JOIN time_slots ts ON ts.id = r.time_slot_id

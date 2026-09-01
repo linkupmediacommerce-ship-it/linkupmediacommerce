@@ -36,7 +36,6 @@ export type TimeSlot = {
   showroom_id: number
   slot_date: string
   start_time: string
-  end_time: string
   is_active: number
   created_at: string
 }

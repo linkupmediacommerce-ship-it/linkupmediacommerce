@@ -118,7 +118,7 @@ export function AdminReservations() {
                 <tr key={r.id}>
                   <td className="px-4 py-3">{r.showroom_name}</td>
                   <td className="px-4 py-3">
-                    {formatDateLabel(r.slot_date)} {r.start_time}~{r.end_time}
+                    {formatDateLabel(r.slot_date)} {r.start_time}
                   </td>
                   <td className="px-4 py-3">
                     {r.user_name}

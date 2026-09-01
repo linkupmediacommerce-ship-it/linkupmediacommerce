@@ -171,7 +171,7 @@ export function ShowroomDetail() {
               <div className="fade-in bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
                 <p className="text-sm text-neutral-700 mb-3">
                   <span className="font-bold">
-                    {formatDateLabel(selectedSlot.slot_date)} {selectedSlot.start_time} ~ {selectedSlot.end_time}
+                    {formatDateLabel(selectedSlot.slot_date)} {selectedSlot.start_time}
                   </span>{' '}
                   방문을 예약하시겠습니까?
                 </p>

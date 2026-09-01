@@ -10,7 +10,6 @@ export function SlotManager({ showroomId }: { showroomId: number }) {
   const [slots, setSlots] = useState<AdminTimeSlot[] | null>(null)
   const [slotDate, setSlotDate] = useState('')
   const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
   const [capacity, setCapacity] = useState('1')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editingCapacity, setEditingCapacity] = useState('1')
@@ -39,13 +38,11 @@ export function SlotManager({ showroomId }: { showroomId: number }) {
       await api.post(`/admin/showrooms/${showroomId}/slots`, {
         slot_date: slotDate,
         start_time: startTime,
-        end_time: endTime,
         capacity: Number(capacity)
       })
       toast('시간대가 추가되었습니다.', 'success')
       setSlotDate('')
       setStartTime('')
-      setEndTime('')
       setCapacity('1')
       load()
     } catch (err) {
@@ -111,16 +108,6 @@ export function SlotManager({ showroomId }: { showroomId: number }) {
           />
         </div>
         <div>
-          <label className="block text-xs text-neutral-500 mb-1">종료</label>
-          <input
-            type="time"
-            required
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            className="border border-neutral-200 rounded-lg px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
           <label className="block text-xs text-neutral-500 mb-1">인원수</label>
           <input
             type="number"
@@ -158,7 +145,7 @@ export function SlotManager({ showroomId }: { showroomId: number }) {
                           : 'bg-neutral-50 border-neutral-200'
                       }`}
                     >
-                      {s.start_time}~{s.end_time}
+                      {s.start_time}
 
                       {isEditing ? (
                         <>

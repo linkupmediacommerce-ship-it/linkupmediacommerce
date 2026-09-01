@@ -14,46 +14,46 @@ INSERT OR IGNORE INTO showrooms (id, name, address, description, image_url) VALU
 
 -- Time slots for the next 7 days (showroom 1, 2, 3) - 10:00 ~ 19:00, 1-hour slots
 -- Showroom 1 (상수점)
-INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time, end_time) VALUES
-  (1, date('now'), '10:00', '11:00'),
-  (1, date('now'), '11:00', '12:00'),
-  (1, date('now'), '13:00', '14:00'),
-  (1, date('now'), '14:00', '15:00'),
-  (1, date('now'), '15:00', '16:00'),
-  (1, date('now'), '16:00', '17:00'),
-  (1, date('now', '+1 day'), '10:00', '11:00'),
-  (1, date('now', '+1 day'), '11:00', '12:00'),
-  (1, date('now', '+1 day'), '13:00', '14:00'),
-  (1, date('now', '+1 day'), '14:00', '15:00'),
-  (1, date('now', '+1 day'), '15:00', '16:00'),
-  (1, date('now', '+2 day'), '10:00', '11:00'),
-  (1, date('now', '+2 day'), '11:00', '12:00'),
-  (1, date('now', '+2 day'), '14:00', '15:00'),
-  (1, date('now', '+2 day'), '15:00', '16:00');
+INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time) VALUES
+  (1, date('now'), '10:00'),
+  (1, date('now'), '11:00'),
+  (1, date('now'), '13:00'),
+  (1, date('now'), '14:00'),
+  (1, date('now'), '15:00'),
+  (1, date('now'), '16:00'),
+  (1, date('now', '+1 day'), '10:00'),
+  (1, date('now', '+1 day'), '11:00'),
+  (1, date('now', '+1 day'), '13:00'),
+  (1, date('now', '+1 day'), '14:00'),
+  (1, date('now', '+1 day'), '15:00'),
+  (1, date('now', '+2 day'), '10:00'),
+  (1, date('now', '+2 day'), '11:00'),
+  (1, date('now', '+2 day'), '14:00'),
+  (1, date('now', '+2 day'), '15:00');
 
 -- Showroom 2 (올림픽공원점)
-INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time, end_time) VALUES
-  (2, date('now'), '10:00', '11:00'),
-  (2, date('now'), '11:00', '12:00'),
-  (2, date('now'), '13:00', '14:00'),
-  (2, date('now'), '15:00', '16:00'),
-  (2, date('now'), '16:00', '17:00'),
-  (2, date('now', '+1 day'), '10:00', '11:00'),
-  (2, date('now', '+1 day'), '13:00', '14:00'),
-  (2, date('now', '+1 day'), '14:00', '15:00'),
-  (2, date('now', '+1 day'), '16:00', '17:00'),
-  (2, date('now', '+2 day'), '11:00', '12:00'),
-  (2, date('now', '+2 day'), '13:00', '14:00'),
-  (2, date('now', '+2 day'), '15:00', '16:00');
+INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time) VALUES
+  (2, date('now'), '10:00'),
+  (2, date('now'), '11:00'),
+  (2, date('now'), '13:00'),
+  (2, date('now'), '15:00'),
+  (2, date('now'), '16:00'),
+  (2, date('now', '+1 day'), '10:00'),
+  (2, date('now', '+1 day'), '13:00'),
+  (2, date('now', '+1 day'), '14:00'),
+  (2, date('now', '+1 day'), '16:00'),
+  (2, date('now', '+2 day'), '11:00'),
+  (2, date('now', '+2 day'), '13:00'),
+  (2, date('now', '+2 day'), '15:00');
 
 -- Showroom 3 (한남점)
-INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time, end_time) VALUES
-  (3, date('now'), '11:00', '12:00'),
-  (3, date('now'), '14:00', '15:00'),
-  (3, date('now'), '16:00', '17:00'),
-  (3, date('now', '+1 day'), '10:00', '11:00'),
-  (3, date('now', '+1 day'), '11:00', '12:00'),
-  (3, date('now', '+1 day'), '15:00', '16:00'),
-  (3, date('now', '+2 day'), '10:00', '11:00'),
-  (3, date('now', '+2 day'), '13:00', '14:00'),
-  (3, date('now', '+2 day'), '17:00', '18:00');
+INSERT OR IGNORE INTO time_slots (showroom_id, slot_date, start_time) VALUES
+  (3, date('now'), '11:00'),
+  (3, date('now'), '14:00'),
+  (3, date('now'), '16:00'),
+  (3, date('now', '+1 day'), '10:00'),
+  (3, date('now', '+1 day'), '11:00'),
+  (3, date('now', '+1 day'), '15:00'),
+  (3, date('now', '+2 day'), '10:00'),
+  (3, date('now', '+2 day'), '13:00'),
+  (3, date('now', '+2 day'), '17:00');

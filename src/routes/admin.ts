@@ -19,7 +19,7 @@ admin.get('/reservations', async (c) => {
     SELECT r.id, r.status, r.memo, r.created_at,
       u.id AS user_id, u.name AS user_name, u.email AS user_email, u.phone AS user_phone,
       s.id AS showroom_id, s.name AS showroom_name,
-      ts.id AS time_slot_id, ts.slot_date, ts.start_time, ts.end_time
+      ts.id AS time_slot_id, ts.slot_date, ts.start_time
     FROM reservations r
     JOIN users u ON u.id = r.user_id
     JOIN showrooms s ON s.id = r.showroom_id
@@ -137,7 +137,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: '회원을 찾을 수 없습니다.' }, 404)
   }
   const { results } = await c.env.DB.prepare(
-    `SELECT r.id, r.status, r.created_at, s.name AS showroom_name, ts.slot_date, ts.start_time, ts.end_time
+    `SELECT r.id, r.status, r.created_at, s.name AS showroom_name, ts.slot_date, ts.start_time
      FROM reservations r
      JOIN showrooms s ON s.id = r.showroom_id
      JOIN time_slots ts ON ts.id = r.time_slot_id
@@ -233,7 +233,7 @@ admin.delete('/showrooms/:id', async (c) => {
 admin.get('/showrooms/:id/slots', async (c) => {
   const id = c.req.param('id')
   const { results } = await c.env.DB.prepare(
-    `SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time, ts.is_active, ts.capacity,
+    `SELECT ts.id, ts.slot_date, ts.start_time, ts.is_active, ts.capacity,
       (SELECT COUNT(*) FROM reservations r WHERE r.time_slot_id = ts.id AND r.status = 'confirmed') AS reserved_count
      FROM time_slots ts
      WHERE ts.showroom_id = ?
@@ -247,10 +247,10 @@ admin.get('/showrooms/:id/slots', async (c) => {
 // POST /api/admin/showrooms/:id/slots - create a new time slot
 admin.post('/showrooms/:id/slots', async (c) => {
   const showroomId = c.req.param('id')
-  const body = await c.req.json<{ slot_date?: string; start_time?: string; end_time?: string; capacity?: number }>()
+  const body = await c.req.json<{ slot_date?: string; start_time?: string; capacity?: number }>()
 
-  if (!body.slot_date || !body.start_time || !body.end_time) {
-    return c.json({ error: '날짜, 시작 시간, 종료 시간을 모두 입력해주세요.' }, 400)
+  if (!body.slot_date || !body.start_time) {
+    return c.json({ error: '날짜와 시작 시간을 입력해주세요.' }, 400)
   }
   const capacity = Number(body.capacity)
   if (!Number.isInteger(capacity) || capacity < 1) {
@@ -259,9 +259,9 @@ admin.post('/showrooms/:id/slots', async (c) => {
 
   try {
     const result = await c.env.DB.prepare(
-      'INSERT INTO time_slots (showroom_id, slot_date, start_time, end_time, capacity) VALUES (?, ?, ?, ?, ?)'
+      'INSERT INTO time_slots (showroom_id, slot_date, start_time, capacity) VALUES (?, ?, ?, ?)'
     )
-      .bind(showroomId, body.slot_date, body.start_time, body.end_time, capacity)
+      .bind(showroomId, body.slot_date, body.start_time, capacity)
       .run()
     return c.json({ id: result.meta.last_row_id })
   } catch (e: any) {

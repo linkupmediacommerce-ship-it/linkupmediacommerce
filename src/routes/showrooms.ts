@@ -39,7 +39,7 @@ showrooms.get('/:id/slots', async (c) => {
   }
 
   let query = `
-    SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time, ts.capacity,
+    SELECT ts.id, ts.slot_date, ts.start_time, ts.capacity,
       (SELECT COUNT(*) FROM reservations r WHERE r.time_slot_id = ts.id AND r.status = 'confirmed') AS reserved_count
     FROM time_slots ts
     WHERE ts.showroom_id = ? AND ts.is_active = 1 AND ts.slot_date >= date('now')

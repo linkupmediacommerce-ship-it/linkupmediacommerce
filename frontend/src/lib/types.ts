@@ -19,7 +19,6 @@ export type TimeSlot = {
   id: number
   slot_date: string
   start_time: string
-  end_time: string
   capacity: number
   reserved_count: number
   remaining: number
@@ -30,7 +29,6 @@ export type AdminTimeSlot = {
   id: number
   slot_date: string
   start_time: string
-  end_time: string
   is_active: number
   capacity: number
   reserved_count: number
@@ -46,7 +44,6 @@ export type MyReservation = {
   showroom_address: string
   slot_date: string
   start_time: string
-  end_time: string
 }
 
 export type AdminReservation = {
@@ -63,7 +60,6 @@ export type AdminReservation = {
   time_slot_id: number
   slot_date: string
   start_time: string
-  end_time: string
 }
 
 export type AdminUser = {

@@ -60,7 +60,7 @@ export function MyReservations() {
                   </Badge>
                 </div>
                 <p className="text-sm text-neutral-500">
-                  {formatDateLabel(r.slot_date)} {r.start_time} ~ {r.end_time}
+                  {formatDateLabel(r.slot_date)} {r.start_time}
                 </p>
                 <p className="text-xs text-neutral-400 mt-1">
                   <i className="fa-solid fa-location-dot mr-1" />

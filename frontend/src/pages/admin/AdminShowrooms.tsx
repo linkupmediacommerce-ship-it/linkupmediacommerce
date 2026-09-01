@@ -85,7 +85,7 @@ export function AdminShowrooms() {
                   <i className="fa-solid fa-location-dot mr-1" />
                   {s.address}
                 </p>
-                <p className="text-sm text-neutral-400 mt-1">{s.description}</p>
+                <p className="text-sm text-neutral-400 mt-1 whitespace-pre-wrap break-words">{s.description}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button

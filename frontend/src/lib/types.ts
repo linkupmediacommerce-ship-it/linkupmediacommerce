@@ -20,6 +20,9 @@ export type TimeSlot = {
   slot_date: string
   start_time: string
   end_time: string
+  capacity: number
+  reserved_count: number
+  remaining: number
   is_available: boolean
 }
 
@@ -29,8 +32,8 @@ export type AdminTimeSlot = {
   start_time: string
   end_time: string
   is_active: number
-  reservation_id: number | null
-  reservation_status: string | null
+  capacity: number
+  reserved_count: number
 }
 
 export type MyReservation = {

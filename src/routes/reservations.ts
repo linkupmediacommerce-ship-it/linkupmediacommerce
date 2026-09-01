@@ -18,10 +18,10 @@ reservations.post('/', async (c) => {
   }
 
   const slot = await c.env.DB.prepare(
-    'SELECT id, showroom_id, slot_date, start_time FROM time_slots WHERE id = ? AND is_active = 1'
+    'SELECT id, showroom_id, slot_date, start_time, capacity FROM time_slots WHERE id = ? AND is_active = 1'
   )
     .bind(timeSlotId)
-    .first<{ id: number; showroom_id: number; slot_date: string; start_time: string }>()
+    .first<{ id: number; showroom_id: number; slot_date: string; start_time: string; capacity: number }>()
 
   if (!slot) {
     return c.json({ error: '유효하지 않은 시간대입니다.' }, 404)
@@ -35,20 +35,28 @@ reservations.post('/', async (c) => {
   }
 
   const existing = await c.env.DB.prepare(
-    "SELECT id FROM reservations WHERE time_slot_id = ? AND status = 'confirmed'"
+    "SELECT id FROM reservations WHERE time_slot_id = ? AND user_id = ? AND status = 'confirmed'"
   )
-    .bind(timeSlotId)
+    .bind(timeSlotId, user.sub)
     .first()
   if (existing) {
-    return c.json({ error: '이미 예약된 시간대입니다.' }, 409)
+    return c.json({ error: '이미 예약하신 시간대입니다.' }, 409)
   }
 
   try {
+    // Atomically insert only if the slot still has remaining capacity
+    // (avoids a separate count-then-insert race between the check and the write).
     const result = await c.env.DB.prepare(
-      "INSERT INTO reservations (user_id, showroom_id, time_slot_id, status, memo) VALUES (?, ?, ?, 'confirmed', ?)"
+      `INSERT INTO reservations (user_id, showroom_id, time_slot_id, status, memo)
+       SELECT ?, ?, ?, 'confirmed', ?
+       WHERE (SELECT COUNT(*) FROM reservations WHERE time_slot_id = ? AND status = 'confirmed') < ?`
     )
-      .bind(user.sub, slot.showroom_id, timeSlotId, body.memo || null)
+      .bind(user.sub, slot.showroom_id, timeSlotId, body.memo || null, timeSlotId, slot.capacity)
       .run()
+
+    if (!result.meta.rows_written) {
+      return c.json({ error: '해당 시간대는 정원이 마감되었습니다.' }, 409)
+    }
 
     return c.json({
       reservation: {
@@ -61,7 +69,7 @@ reservations.post('/', async (c) => {
     })
   } catch (e: any) {
     if (String(e.message || '').includes('UNIQUE')) {
-      return c.json({ error: '이미 예약된 시간대입니다.' }, 409)
+      return c.json({ error: '이미 예약하신 시간대입니다.' }, 409)
     }
     return c.json({ error: '예약 생성 중 오류가 발생했습니다.' }, 500)
   }

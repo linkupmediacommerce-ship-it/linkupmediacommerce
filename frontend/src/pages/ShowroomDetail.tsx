@@ -137,11 +137,12 @@ export function ShowroomDetail() {
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {slotsForDate.map((s) => {
                   const isSelected = selectedSlot?.id === s.id
-                  const base = 'px-3 py-2.5 rounded-xl text-sm font-medium border text-center transition'
+                  const base = 'px-3 py-2.5 rounded-xl text-sm font-medium border text-center transition flex flex-col items-center gap-0.5'
                   if (!s.is_available) {
                     return (
                       <button key={s.id} disabled className={`${base} bg-neutral-100 text-neutral-300 border-neutral-100 cursor-not-allowed`}>
-                        {s.start_time}
+                        <span>{s.start_time}</span>
+                        <span className="text-[10px]">마감</span>
                       </button>
                     )
                   }
@@ -155,7 +156,10 @@ export function ShowroomDetail() {
                           : 'bg-white border-neutral-200 hover:border-amber-500'
                       }`}
                     >
-                      {s.start_time}
+                      <span>{s.start_time}</span>
+                      <span className={`text-[10px] ${isSelected ? 'text-amber-100' : 'text-neutral-400'}`}>
+                        {s.remaining}/{s.capacity}명
+                      </span>
                     </button>
                   )
                 })}

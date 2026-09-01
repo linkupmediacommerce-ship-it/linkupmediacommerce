@@ -39,10 +39,9 @@ showrooms.get('/:id/slots', async (c) => {
   }
 
   let query = `
-    SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time,
-      CASE WHEN r.id IS NULL THEN 1 ELSE 0 END AS is_available
+    SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time, ts.capacity,
+      (SELECT COUNT(*) FROM reservations r WHERE r.time_slot_id = ts.id AND r.status = 'confirmed') AS reserved_count
     FROM time_slots ts
-    LEFT JOIN reservations r ON r.time_slot_id = ts.id AND r.status = 'confirmed'
     WHERE ts.showroom_id = ? AND ts.is_active = 1 AND ts.slot_date >= date('now')
   `
   const params: (string | number)[] = [id]
@@ -56,7 +55,10 @@ showrooms.get('/:id/slots', async (c) => {
   const stmt = c.env.DB.prepare(query).bind(...params)
   const { results } = await stmt.all()
 
-  const slots = (results as any[]).map((s) => ({ ...s, is_available: !!s.is_available }))
+  const slots = (results as any[]).map((s) => {
+    const remaining = Math.max(0, s.capacity - s.reserved_count)
+    return { ...s, remaining, is_available: remaining > 0 }
+  })
   return c.json({ slots })
 })
 

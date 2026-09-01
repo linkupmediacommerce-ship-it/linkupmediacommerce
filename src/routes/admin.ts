@@ -229,14 +229,13 @@ admin.delete('/showrooms/:id', async (c) => {
 
 /* ---------------------- Time Slots Management ------------------------ */
 
-// GET /api/admin/showrooms/:id/slots - list time slots for a showroom (admin view, incl. reservation status)
+// GET /api/admin/showrooms/:id/slots - list time slots for a showroom (admin view, incl. reservation count)
 admin.get('/showrooms/:id/slots', async (c) => {
   const id = c.req.param('id')
   const { results } = await c.env.DB.prepare(
-    `SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time, ts.is_active,
-      r.id AS reservation_id, r.status AS reservation_status
+    `SELECT ts.id, ts.slot_date, ts.start_time, ts.end_time, ts.is_active, ts.capacity,
+      (SELECT COUNT(*) FROM reservations r WHERE r.time_slot_id = ts.id AND r.status = 'confirmed') AS reserved_count
      FROM time_slots ts
-     LEFT JOIN reservations r ON r.time_slot_id = ts.id AND r.status = 'confirmed'
      WHERE ts.showroom_id = ?
      ORDER BY ts.slot_date ASC, ts.start_time ASC`
   )
@@ -248,17 +247,21 @@ admin.get('/showrooms/:id/slots', async (c) => {
 // POST /api/admin/showrooms/:id/slots - create a new time slot
 admin.post('/showrooms/:id/slots', async (c) => {
   const showroomId = c.req.param('id')
-  const body = await c.req.json<{ slot_date?: string; start_time?: string; end_time?: string }>()
+  const body = await c.req.json<{ slot_date?: string; start_time?: string; end_time?: string; capacity?: number }>()
 
   if (!body.slot_date || !body.start_time || !body.end_time) {
     return c.json({ error: '날짜, 시작 시간, 종료 시간을 모두 입력해주세요.' }, 400)
   }
+  const capacity = Number(body.capacity)
+  if (!Number.isInteger(capacity) || capacity < 1) {
+    return c.json({ error: '인원수는 1명 이상의 정수로 입력해주세요.' }, 400)
+  }
 
   try {
     const result = await c.env.DB.prepare(
-      'INSERT INTO time_slots (showroom_id, slot_date, start_time, end_time) VALUES (?, ?, ?, ?)'
+      'INSERT INTO time_slots (showroom_id, slot_date, start_time, end_time, capacity) VALUES (?, ?, ?, ?, ?)'
     )
-      .bind(showroomId, body.slot_date, body.start_time, body.end_time)
+      .bind(showroomId, body.slot_date, body.start_time, body.end_time, capacity)
       .run()
     return c.json({ id: result.meta.last_row_id })
   } catch (e: any) {
@@ -267,6 +270,40 @@ admin.post('/showrooms/:id/slots', async (c) => {
     }
     return c.json({ error: '시간대 생성 중 오류가 발생했습니다.' }, 500)
   }
+})
+
+// PATCH /api/admin/slots/:id - update a time slot's capacity
+admin.patch('/slots/:id', async (c) => {
+  const id = c.req.param('id')
+  const body = await c.req.json<{ capacity?: number }>()
+
+  if (body.capacity === undefined) {
+    return c.json({ error: '변경할 내용이 없습니다.' }, 400)
+  }
+  const capacity = Number(body.capacity)
+  if (!Number.isInteger(capacity) || capacity < 1) {
+    return c.json({ error: '인원수는 1명 이상의 정수로 입력해주세요.' }, 400)
+  }
+
+  const slot = await c.env.DB.prepare('SELECT id FROM time_slots WHERE id = ?').bind(id).first()
+  if (!slot) {
+    return c.json({ error: '시간대를 찾을 수 없습니다.' }, 404)
+  }
+
+  const reservedCount = await c.env.DB.prepare(
+    "SELECT COUNT(*) AS cnt FROM reservations WHERE time_slot_id = ? AND status = 'confirmed'"
+  )
+    .bind(id)
+    .first<{ cnt: number }>()
+  if (reservedCount && capacity < reservedCount.cnt) {
+    return c.json(
+      { error: `이미 ${reservedCount.cnt}명이 예약되어 있어 인원수를 그보다 적게 설정할 수 없습니다.` },
+      409
+    )
+  }
+
+  await c.env.DB.prepare('UPDATE time_slots SET capacity = ? WHERE id = ?').bind(capacity, id).run()
+  return c.json({ success: true })
 })
 
 // DELETE /api/admin/slots/:id - delete a time slot (only if not reserved)

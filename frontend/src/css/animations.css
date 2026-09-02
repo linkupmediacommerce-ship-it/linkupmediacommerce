@@ -1,13 +1,4 @@
-/* Brooks Showroom Reservation - global styles */
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
+/* Reusable keyframe animations and their utility classes */
 
 .fade-in {
   animation: fadeIn 0.25s ease;
@@ -27,11 +18,4 @@ body {
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }

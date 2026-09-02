@@ -1,0 +1,4 @@
+/* Custom styles for shared components (buttons, cards, badges, etc.)
+   Most styling should stay in Tailwind utility classes inside the .tsx files —
+   only add rules here when a Tailwind CDN utility can't express what you need
+   (e.g. complex pseudo-elements, custom scrollbars, third-party widget overrides). */

@@ -1,0 +1,8 @@
+/* Entry point for all custom CSS — imported once from src/main.tsx.
+   Add new files to the css/ folder and import them below to keep things organized. */
+
+@import './base.css';
+@import './animations.css';
+@import './utilities.css';
+@import './components.css';
+@import './pages.css';

@@ -1,0 +1,6 @@
+/* Page-specific overrides that don't fit cleanly as Tailwind utility classes.
+   Prefix rules with the page name to keep things easy to find, e.g.:
+
+   .showroom-detail-map { ... }
+   .admin-dashboard-chart { ... }
+*/

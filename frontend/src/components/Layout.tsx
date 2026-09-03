@@ -24,7 +24,9 @@ export function Layout() {
             <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">쇼룸 목록</Link>
             {user ? (
               <>
-                <Link to="/my" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">내 예약</Link>
+                {user.role === 'user' && (
+                  <Link to="/my" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">내 예약</Link>
+                )}
                 {(user.role === 'super_admin' || user.role === 'brand_admin') && (
                   <Link to="/admin" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition text-amber-700">관리자</Link>
                 )}

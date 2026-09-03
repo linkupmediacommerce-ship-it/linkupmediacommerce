@@ -21,7 +21,8 @@ export function Login() {
     try {
       const user = await login(email, password)
       toast(`${user.name}님, 환영합니다!`, 'success')
-      navigate(next || '/showrooms')
+      const isAdmin = user.role === 'super_admin' || user.role === 'brand_admin'
+      navigate(next || (isAdmin ? '/admin' : '/showrooms'))
     } catch (err) {
       toast(apiErrorMessage(err, '로그인에 실패했습니다.'), 'error')
       setSubmitting(false)

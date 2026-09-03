@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ToastProvider } from './context/ToastContext'
+import { useAuth } from './context/AuthContext'
 import { Layout } from './components/Layout'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { ShowroomList } from './pages/ShowroomList'
@@ -24,12 +25,19 @@ function NotFound() {
   )
 }
 
+function IndexRedirect() {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  const isAdmin = user?.role === 'super_admin' || user?.role === 'brand_admin'
+  return <Navigate to={isAdmin ? '/admin' : '/showrooms'} replace />
+}
+
 function App() {
   return (
     <ToastProvider>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Navigate to="/showrooms" replace />} />
+          <Route index element={<IndexRedirect />} />
           <Route path="showrooms" element={<ShowroomList />} />
           <Route path="showrooms/:id" element={<ShowroomDetail />} />
           <Route path="login" element={<Login />} />

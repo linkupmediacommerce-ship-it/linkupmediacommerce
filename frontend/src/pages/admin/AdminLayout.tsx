@@ -1,18 +1,25 @@
 import { NavLink, Outlet } from 'react-router-dom'
-
-const TABS = [
-  { to: '/admin/reservations', label: '예약 관리', icon: 'fa-calendar-check' },
-  { to: '/admin/users', label: '회원 관리', icon: 'fa-users' },
-  { to: '/admin/showrooms', label: '쇼룸 관리', icon: 'fa-store' }
-]
+import { useAuth } from '../../context/AuthContext'
 
 export function AdminLayout() {
+  const { user } = useAuth()
+  const isSuperAdmin = user?.role === 'super_admin'
+
+  const tabs = [
+    { to: '/admin/reservations', label: '예약 관리', icon: 'fa-calendar-check' },
+    ...(isSuperAdmin ? [{ to: '/admin/users', label: '회원 관리', icon: 'fa-users' }] : []),
+    { to: '/admin/showrooms', label: '쇼룸 관리', icon: 'fa-store' },
+    ...(isSuperAdmin ? [{ to: '/admin/brands', label: '브랜드 관리', icon: 'fa-building' }] : [])
+  ]
+
   return (
     <div className="fade-in">
       <h1 className="text-2xl font-bold mb-2">관리자 페이지</h1>
-      <p className="text-neutral-500 mb-4">예약, 회원, 쇼룸을 관리합니다.</p>
+      <p className="text-neutral-500 mb-4">
+        {isSuperAdmin ? '전체 브랜드의 예약, 회원, 쇼룸을 관리합니다.' : '내 브랜드의 예약과 쇼룸을 관리합니다.'}
+      </p>
       <div className="flex gap-2 mb-6 border-b border-neutral-200">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}

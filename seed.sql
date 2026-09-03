@@ -6,6 +6,15 @@ INSERT OR IGNORE INTO users (email, password_hash, name, phone, is_admin) VALUES
   ('admin@brooks.com', 'sha256:ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270', '관리자', '010-0000-0000', 1),
   ('user@brooks.com', 'sha256:831c237928e6212bedaa4451a514ace3174562f6761f6a157a2fe5082b36e2fb', '테스트유저', '010-1111-2222', 0);
 
+-- all4run platform accounts (created after 0004_multi_brand migration adds role/brand_id columns)
+-- Super admin (password: admin1234)
+INSERT OR IGNORE INTO users (email, password_hash, name, phone, is_admin, role, brand_id) VALUES
+  ('admin@all4run.co.kr', 'sha256:ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270', 'all4run 관리자', '010-0000-0000', 1, 'super_admin', NULL);
+
+-- BROOKS brand admin (password: brooks1234), scoped to brand_id=1 (BROOKS)
+INSERT OR IGNORE INTO users (email, password_hash, name, phone, is_admin, role, brand_id) VALUES
+  ('brooks@all4run.co.kr', 'sha256:5a09184da19e429e5e5886e1cf7cf07f784045ac9153a2e59e55f4cca5f84a79', 'BROOKS 브랜드관리자', '010-0000-0001', 0, 'brand_admin', 1);
+
 -- Showrooms (쇼룸 지점)
 INSERT OR IGNORE INTO showrooms (id, name, address, description, image_url) VALUES
   (1, '상수점', '서울특별시 마포구 상수동 92-1', '한강이 보이는 프리미엄 쇼룸, 넓은 주차공간 제공', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'),

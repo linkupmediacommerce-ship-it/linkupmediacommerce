@@ -3,7 +3,15 @@ import type { ReactNode } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Spinner } from './Spinner'
 
-export function ProtectedRoute({ children, adminOnly = false }: { children: ReactNode; adminOnly?: boolean }) {
+export function ProtectedRoute({
+  children,
+  adminOnly = false,
+  superAdminOnly = false
+}: {
+  children: ReactNode
+  adminOnly?: boolean
+  superAdminOnly?: boolean
+}) {
   const { user, loading } = useAuth()
   const location = useLocation()
 
@@ -14,8 +22,13 @@ export function ProtectedRoute({ children, adminOnly = false }: { children: Reac
     return <Navigate to={`/login?next=${next}`} replace />
   }
 
-  if (adminOnly && !user.is_admin) {
+  const isAdmin = user.role === 'super_admin' || user.role === 'brand_admin'
+  if (adminOnly && !isAdmin) {
     return <Navigate to="/showrooms" replace />
+  }
+
+  if (superAdminOnly && user.role !== 'super_admin') {
+    return <Navigate to="/admin" replace />
   }
 
   return <>{children}</>

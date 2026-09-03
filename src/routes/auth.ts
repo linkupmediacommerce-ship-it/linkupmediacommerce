@@ -46,12 +46,19 @@ auth.post('/signup', async (c) => {
     .run()
 
   const userId = result.meta.last_row_id as number
-  const token = await createToken(c, { sub: userId, email, name, is_admin: false })
+  const token = await createToken(c, {
+    sub: userId,
+    email,
+    name,
+    is_admin: false,
+    role: 'user',
+    brand_id: null
+  })
   setCookie(c, 'brooks_token', token, COOKIE_OPTS)
 
   return c.json({
     token,
-    user: { id: userId, email, name, phone, is_admin: false }
+    user: { id: userId, email, name, phone, is_admin: false, role: 'user', brand_id: null }
   })
 })
 
@@ -76,17 +83,29 @@ auth.post('/login', async (c) => {
   }
 
   const isAdmin = !!user.is_admin
+  const role = user.role || 'user'
+  const brandId = user.brand_id ?? null
   const token = await createToken(c, {
     sub: user.id,
     email: user.email,
     name: user.name,
-    is_admin: isAdmin
+    is_admin: isAdmin,
+    role,
+    brand_id: brandId
   })
   setCookie(c, 'brooks_token', token, COOKIE_OPTS)
 
   return c.json({
     token,
-    user: { id: user.id, email: user.email, name: user.name, phone: user.phone, is_admin: isAdmin }
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      is_admin: isAdmin,
+      role,
+      brand_id: brandId
+    }
   })
 })
 
@@ -99,7 +118,7 @@ auth.post('/logout', async (c) => {
 // GET /api/auth/me
 auth.get('/me', requireAuth, async (c) => {
   const payload = c.get('user' as never) as { sub: number; email: string; name: string; is_admin: boolean }
-  const user = await c.env.DB.prepare('SELECT id, email, name, phone, is_admin FROM users WHERE id = ?')
+  const user = await c.env.DB.prepare('SELECT id, email, name, phone, is_admin, role, brand_id FROM users WHERE id = ?')
     .bind(payload.sub)
     .first()
   if (!user) {

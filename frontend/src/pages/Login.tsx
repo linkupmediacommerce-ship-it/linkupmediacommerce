@@ -72,7 +72,9 @@ export function Login() {
         <p className="text-center text-xs text-neutral-400 pt-2 border-t border-neutral-100">
           테스트 계정: user@brooks.com / user1234
           <br />
-          관리자 계정: admin@brooks.com / admin1234
+          최고관리자: admin@all4run.co.kr / admin1234
+          <br />
+          브랜드관리자(BROOKS): brooks@all4run.co.kr / brooks1234
         </p>
       </form>
     </div>

@@ -40,7 +40,15 @@ export function AdminUsers() {
               <td className="px-4 py-3">{u.phone || '-'}</td>
               <td className="px-4 py-3 text-neutral-400">{dayjs(u.created_at).format('YYYY-MM-DD')}</td>
               <td className="px-4 py-3">{u.reservation_count}</td>
-              <td className="px-4 py-3">{u.is_admin ? <Badge variant="admin">관리자</Badge> : '일반회원'}</td>
+              <td className="px-4 py-3">
+                {u.role === 'super_admin' ? (
+                  <Badge variant="admin">최고관리자</Badge>
+                ) : u.role === 'brand_admin' ? (
+                  <Badge variant="admin">브랜드관리자{u.brand_id ? ` #${u.brand_id}` : ''}</Badge>
+                ) : (
+                  '일반회원'
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

@@ -17,15 +17,15 @@ export function Layout() {
     <div className="min-h-screen flex flex-col">
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/showrooms" className="flex items-center">
-            <img src="/images/brooks-logo.png" alt="BROOKS" className="h-6 sm:h-7 w-auto" />
+          <Link to="/showrooms" className="flex items-center gap-2">
+            <span className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900">all4run</span>
           </Link>
           <nav className="flex items-center gap-3 text-sm font-medium">
             <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">쇼룸 목록</Link>
             {user ? (
               <>
                 <Link to="/my" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">내 예약</Link>
-                {user.is_admin && (
+                {(user.role === 'super_admin' || user.role === 'brand_admin') && (
                   <Link to="/admin" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition text-amber-700">관리자</Link>
                 )}
                 <span className="text-neutral-400 mx-1">|</span>
@@ -50,7 +50,7 @@ export function Layout() {
         <Outlet />
       </main>
       <footer className="border-t border-neutral-200 py-6 text-center text-xs text-neutral-400">
-        © 2026 BROOKS Showroom Reservation. All rights reserved.
+        © 2026 all4run. All rights reserved.
       </footer>
     </div>
   )

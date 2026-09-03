@@ -79,6 +79,11 @@ export function AdminShowrooms() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="font-bold text-lg">{s.name}</h3>
+                  {s.brand_name && (
+                    <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 rounded-full px-2 py-0.5">
+                      {s.brand_name}
+                    </span>
+                  )}
                   {!s.is_active && <Badge variant="cancelled">비활성</Badge>}
                 </div>
                 <p className="text-sm text-neutral-500">

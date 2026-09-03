@@ -57,7 +57,9 @@ export async function requireAuth(c: Context<{ Bindings: Bindings }>, next: Next
   await next()
 }
 
-// Requires a valid token AND admin privileges.
+// Requires a valid token AND admin privileges (super_admin OR brand_admin).
+// Use this for admin routes that should be reachable by either role;
+// apply brand-scoping to the underlying query using c.get('user').
 export async function requireAdmin(c: Context<{ Bindings: Bindings }>, next: Next) {
   const token = extractToken(c)
   if (!token) {
@@ -65,8 +67,27 @@ export async function requireAdmin(c: Context<{ Bindings: Bindings }>, next: Nex
   }
   try {
     const payload = (await verify(token, getJwtSecret(c), 'HS256')) as unknown as JwtPayload
-    if (!payload.is_admin) {
+    if (payload.role !== 'super_admin' && payload.role !== 'brand_admin') {
       return c.json({ error: '관리자 권한이 필요합니다.' }, 403)
+    }
+    c.set('user', payload)
+  } catch {
+    return c.json({ error: '유효하지 않거나 만료된 토큰입니다.' }, 401)
+  }
+  await next()
+}
+
+// Requires a valid token AND super_admin privileges only (platform-wide operations
+// such as brand management). Brand admins are rejected.
+export async function requireSuperAdmin(c: Context<{ Bindings: Bindings }>, next: Next) {
+  const token = extractToken(c)
+  if (!token) {
+    return c.json({ error: '로그인이 필요합니다.' }, 401)
+  }
+  try {
+    const payload = (await verify(token, getJwtSecret(c), 'HS256')) as unknown as JwtPayload
+    if (payload.role !== 'super_admin') {
+      return c.json({ error: '최고관리자 권한이 필요합니다.' }, 403)
     }
     c.set('user', payload)
   } catch {

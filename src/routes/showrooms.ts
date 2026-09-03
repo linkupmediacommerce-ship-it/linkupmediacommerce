@@ -3,10 +3,15 @@ import type { Bindings } from '../utils/types'
 
 const showrooms = new Hono<{ Bindings: Bindings }>()
 
-// GET /api/showrooms - list active showrooms
+// GET /api/showrooms - list active showrooms across ALL brands (single mixed feed, MVP).
 showrooms.get('/', async (c) => {
   const { results } = await c.env.DB.prepare(
-    'SELECT id, name, address, description, image_url FROM showrooms WHERE is_active = 1 ORDER BY id ASC'
+    `SELECT s.id, s.name, s.address, s.description, s.image_url, s.brand_id,
+      b.name AS brand_name, b.slug AS brand_slug
+     FROM showrooms s
+     JOIN brands b ON b.id = s.brand_id
+     WHERE s.is_active = 1 AND b.is_active = 1
+     ORDER BY s.id ASC`
   ).all()
   return c.json({ showrooms: results })
 })
@@ -15,7 +20,11 @@ showrooms.get('/', async (c) => {
 showrooms.get('/:id', async (c) => {
   const id = c.req.param('id')
   const showroom = await c.env.DB.prepare(
-    'SELECT id, name, address, description, image_url FROM showrooms WHERE id = ? AND is_active = 1'
+    `SELECT s.id, s.name, s.address, s.description, s.image_url, s.brand_id,
+      b.name AS brand_name, b.slug AS brand_slug
+     FROM showrooms s
+     JOIN brands b ON b.id = s.brand_id
+     WHERE s.id = ? AND s.is_active = 1 AND b.is_active = 1`
   )
     .bind(id)
     .first()
@@ -31,7 +40,10 @@ showrooms.get('/:id/slots', async (c) => {
   const id = c.req.param('id')
   const date = c.req.query('date')
 
-  const showroom = await c.env.DB.prepare('SELECT id FROM showrooms WHERE id = ? AND is_active = 1')
+  const showroom = await c.env.DB.prepare(
+    `SELECT s.id FROM showrooms s JOIN brands b ON b.id = s.brand_id
+     WHERE s.id = ? AND s.is_active = 1 AND b.is_active = 1`
+  )
     .bind(id)
     .first()
   if (!showroom) {

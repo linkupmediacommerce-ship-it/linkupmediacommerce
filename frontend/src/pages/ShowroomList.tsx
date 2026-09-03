@@ -22,7 +22,7 @@ export function ShowroomList() {
     <div className="fade-in">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">쇼룸 예약</h1>
-        <p className="text-neutral-500">방문하실 브룩스 쇼룸 지점을 선택해주세요.</p>
+        <p className="text-neutral-500">방문하실 브랜드 쇼룸을 선택해주세요.</p>
       </div>
 
       {showrooms.length === 0 ? (
@@ -45,6 +45,11 @@ export function ShowroomList() {
                 )}
               </div>
               <div className="p-5">
+                {s.brand_name && (
+                  <span className="inline-block text-[11px] font-semibold text-amber-700 bg-amber-50 rounded-full px-2 py-0.5 mb-1.5">
+                    {s.brand_name}
+                  </span>
+                )}
                 <h3 className="text-lg font-bold mb-1">{s.name}</h3>
                 <p className="text-sm text-neutral-500 mb-2">
                   <i className="fa-solid fa-location-dot mr-1" />

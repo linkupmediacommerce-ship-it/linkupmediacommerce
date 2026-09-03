@@ -11,6 +11,7 @@ import { AdminLayout } from './pages/admin/AdminLayout'
 import { AdminReservations } from './pages/admin/AdminReservations'
 import { AdminUsers } from './pages/admin/AdminUsers'
 import { AdminShowrooms } from './pages/admin/AdminShowrooms'
+import { AdminBrands } from './pages/admin/AdminBrands'
 
 function NotFound() {
   return (
@@ -53,6 +54,14 @@ function App() {
             <Route path="reservations" element={<AdminReservations />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="showrooms" element={<AdminShowrooms />} />
+            <Route
+              path="brands"
+              element={
+                <ProtectedRoute superAdminOnly>
+                  <AdminBrands />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>

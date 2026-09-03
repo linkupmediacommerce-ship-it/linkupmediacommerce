@@ -1,13 +1,31 @@
+export type Role = 'user' | 'brand_admin' | 'super_admin'
+
 export type User = {
   id: number
   email: string
   name: string
   phone: string | null
   is_admin: boolean
+  role: Role
+  brand_id: number | null
+}
+
+export type Brand = {
+  id: number
+  slug: string
+  name: string
+  description: string | null
+  logo_url: string | null
+  is_active: number
+  created_at: string
+  showroom_count?: number
 }
 
 export type Showroom = {
   id: number
+  brand_id: number
+  brand_name?: string
+  brand_slug?: string
   name: string
   address: string
   description: string | null
@@ -68,6 +86,8 @@ export type AdminUser = {
   name: string
   phone: string | null
   is_admin: boolean
+  role: Role
+  brand_id: number | null
   created_at: string
   reservation_count: number
 }

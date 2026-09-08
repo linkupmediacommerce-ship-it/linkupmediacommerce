@@ -11,7 +11,7 @@ showrooms.get('/', async (c) => {
      FROM showrooms s
      JOIN brands b ON b.id = s.brand_id
      WHERE s.is_active = 1 AND b.is_active = 1
-     ORDER BY s.id ASC`
+     ORDER BY s.display_order ASC, s.id ASC`
   ).all()
   return c.json({ showrooms: results })
 })

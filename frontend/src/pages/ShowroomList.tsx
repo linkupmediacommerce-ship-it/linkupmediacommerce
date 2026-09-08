@@ -29,12 +29,18 @@ export function ShowroomList() {
         <p className="text-neutral-400 text-center py-16">등록된 쇼룸이 없습니다.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {showrooms.map((s) => (
+          {showrooms.map((s, index) => (
             <Link
               key={s.id}
               to={`/showrooms/${s.id}`}
-              className="block bg-white rounded-2xl overflow-hidden border border-neutral-200 transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="relative block bg-white rounded-2xl overflow-hidden border border-neutral-200 transition hover:-translate-y-0.5 hover:shadow-lg"
             >
+              {index === 0 && (
+                <span className="absolute top-3 left-3 z-10 text-[11px] font-bold text-white bg-amber-600 rounded-full px-2.5 py-1 shadow">
+                  <i className="fa-solid fa-thumbtack mr-1" />
+                  PICK
+                </span>
+              )}
               <div className="h-44 bg-neutral-100 overflow-hidden">
                 {s.image_url ? (
                   <img src={s.image_url} className="w-full h-full object-cover" alt={s.name} />

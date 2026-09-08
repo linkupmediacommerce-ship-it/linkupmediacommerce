@@ -310,19 +310,19 @@ admin.get('/showrooms', async (c) => {
   const base = `SELECT s.*, b.name AS brand_name, b.slug AS brand_slug FROM showrooms s JOIN brands b ON b.id = s.brand_id`
 
   if (user.role === 'brand_admin') {
-    const { results } = await c.env.DB.prepare(`${base} WHERE s.brand_id = ? ORDER BY s.id ASC`)
+    const { results } = await c.env.DB.prepare(`${base} WHERE s.brand_id = ? ORDER BY s.display_order ASC, s.id ASC`)
       .bind(user.brand_id)
       .all()
     return c.json({ showrooms: results })
   }
   const brandFilter = c.req.query('brand_id')
   if (brandFilter) {
-    const { results } = await c.env.DB.prepare(`${base} WHERE s.brand_id = ? ORDER BY s.id ASC`)
+    const { results } = await c.env.DB.prepare(`${base} WHERE s.brand_id = ? ORDER BY s.display_order ASC, s.id ASC`)
       .bind(brandFilter)
       .all()
     return c.json({ showrooms: results })
   }
-  const { results } = await c.env.DB.prepare(`${base} ORDER BY s.id ASC`).all()
+  const { results } = await c.env.DB.prepare(`${base} ORDER BY s.display_order ASC, s.id ASC`).all()
   return c.json({ showrooms: results })
 })
 
@@ -356,10 +356,16 @@ admin.post('/showrooms', async (c) => {
     brandId = body.brand_id
   }
 
+  // New showrooms are appended to the end of the display order by default.
+  const maxOrderRow = await c.env.DB.prepare('SELECT MAX(display_order) AS max_order FROM showrooms').first<{
+    max_order: number | null
+  }>()
+  const nextOrder = (maxOrderRow?.max_order ?? 0) + 10
+
   const result = await c.env.DB.prepare(
-    'INSERT INTO showrooms (brand_id, name, address, description, image_url) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO showrooms (brand_id, name, address, description, image_url, display_order) VALUES (?, ?, ?, ?, ?, ?)'
   )
-    .bind(brandId, body.name, body.address, body.description || null, body.image_url || null)
+    .bind(brandId, body.name, body.address, body.description || null, body.image_url || null, nextOrder)
     .run()
   return c.json({ id: result.meta.last_row_id })
 })
@@ -430,6 +436,56 @@ admin.delete('/showrooms/:id', async (c) => {
   await c.env.DB.prepare('DELETE FROM reservations WHERE showroom_id = ?').bind(id).run()
   await c.env.DB.prepare('DELETE FROM time_slots WHERE showroom_id = ?').bind(id).run()
   await c.env.DB.prepare('DELETE FROM showrooms WHERE id = ?').bind(id).run()
+
+  return c.json({ success: true })
+})
+
+// POST /api/admin/showrooms/:id/reorder - move a showroom within the global mixed feed order.
+// super_admin only: ordering spans ALL brands (the public feed is a single mixed list),
+// so a brand_admin re-ordering their own showrooms would have unpredictable effects on
+// other brands' positions. body: { action: 'top' | 'up' | 'down' }
+admin.post('/showrooms/:id/reorder', requireSuperAdmin, async (c) => {
+  const id = Number(c.req.param('id'))
+  const body = await c.req.json<{ action?: 'top' | 'up' | 'down' }>()
+  const action = body.action
+
+  if (action !== 'top' && action !== 'up' && action !== 'down') {
+    return c.json({ error: "action은 'top', 'up', 'down' 중 하나여야 합니다." }, 400)
+  }
+
+  // Full ordered list across ALL brands (global mixed-feed order).
+  const { results } = await c.env.DB.prepare(
+    'SELECT id FROM showrooms ORDER BY display_order ASC, id ASC'
+  ).all<{ id: number }>()
+  const ids = results.map((r) => r.id)
+
+  const index = ids.indexOf(id)
+  if (index === -1) {
+    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+  }
+
+  if (action === 'top') {
+    if (index > 0) {
+      ids.splice(index, 1)
+      ids.unshift(id)
+    }
+  } else if (action === 'up') {
+    if (index === 0) {
+      return c.json({ error: '이미 최상단입니다.' }, 400)
+    }
+    ;[ids[index - 1], ids[index]] = [ids[index], ids[index - 1]]
+  } else {
+    if (index === ids.length - 1) {
+      return c.json({ error: '이미 최하단입니다.' }, 400)
+    }
+    ;[ids[index], ids[index + 1]] = [ids[index + 1], ids[index]]
+  }
+
+  // Renumber sequentially (gaps of 10) to keep future manual DB edits easy and avoid tie collisions.
+  const statements = ids.map((showroomId, i) =>
+    c.env.DB.prepare('UPDATE showrooms SET display_order = ? WHERE id = ?').bind((i + 1) * 10, showroomId)
+  )
+  await c.env.DB.batch(statements)
 
   return c.json({ success: true })
 })

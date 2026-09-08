@@ -31,6 +31,7 @@ export type Showroom = {
   description: string | null
   image_url: string | null
   is_active?: number
+  display_order?: number
 }
 
 export type TimeSlot = {

@@ -4,6 +4,7 @@ import type { Bindings, User } from '../utils/types'
 import { hashPassword, verifyPassword } from '../utils/crypto'
 import { createToken, requireAuth } from '../utils/auth'
 import { buildKakaoAuthorizeUrl, exchangeKakaoCode, fetchKakaoProfile, randomState } from '../utils/kakao'
+import { buildPlaceholderEmail, generateOpaquePassword } from '../utils/sns'
 
 const auth = new Hono<{ Bindings: Bindings }>()
 
@@ -83,8 +84,7 @@ auth.post('/login', async (c) => {
   }
 
   const user = await c.env.DB.prepare('SELECT * FROM users WHERE email = ?').bind(email).first<User>()
-  if (!user || !user.password_hash) {
-    // No matching row, or the account was created via SNS login and has no password set.
+  if (!user) {
     return c.json({ error: '이메일 또는 비밀번호가 일치하지 않습니다.' }, 401)
   }
 
@@ -223,26 +223,33 @@ auth.get('/kakao/callback', async (c) => {
       // 2) First-time Kakao login. If Kakao gave us an email that's already used by
       // ANY existing account (local or another provider), don't attach it to this new
       // row — silently merging accounts by email is a security risk (email consent can
-      // be spoofed-ish across providers), so we just leave email blank for this account
-      // instead. The user still ends up with a working, distinct account either way.
-      let emailToStore: string | null = null
-      if (profile.email) {
-        const emailOwner = await c.env.DB.prepare('SELECT id FROM users WHERE email = ?').bind(profile.email).first()
-        emailToStore = emailOwner ? null : profile.email
+      // be spoofed-ish across providers), so we fall back to a placeholder email for
+      // this account instead. The user still ends up with a working, distinct account
+      // either way. email/password_hash stay NOT NULL in the DB (see migrations/0006),
+      // so accounts with no real email/password get synthetic placeholder values that
+      // satisfy the constraint but can never be used to log in via the password form.
+      let emailToStore = profile.email
+      if (emailToStore) {
+        const emailOwner = await c.env.DB.prepare('SELECT id FROM users WHERE email = ?').bind(emailToStore).first()
+        if (emailOwner) emailToStore = null
       }
+      if (!emailToStore) {
+        emailToStore = buildPlaceholderEmail('kakao', providerUserId)
+      }
+      const opaquePasswordHash = await hashPassword(generateOpaquePassword())
       const name = profile.nickname?.trim() || '카카오 사용자'
 
       const result = await c.env.DB.prepare(
         `INSERT INTO users (email, password_hash, name, phone, is_admin, role, auth_provider, provider_user_id)
-         VALUES (?, NULL, ?, NULL, 0, 'user', 'kakao', ?)`
+         VALUES (?, ?, ?, NULL, 0, 'user', 'kakao', ?)`
       )
-        .bind(emailToStore, name, providerUserId)
+        .bind(emailToStore, opaquePasswordHash, name, providerUserId)
         .run()
 
       user = {
         id: result.meta.last_row_id as number,
         email: emailToStore,
-        password_hash: null,
+        password_hash: opaquePasswordHash,
         name,
         phone: null,
         is_admin: 0,

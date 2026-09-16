@@ -14,7 +14,10 @@ export type AuthProvider = 'local' | 'kakao' | 'naver' | 'google'
 
 export type JwtPayload = {
   sub: number // user id
-  email: string | null
+  // Always set (SNS accounts without a real email get a synthetic placeholder --
+  // see utils/sns.ts -- so the DB column stays NOT NULL); use isPlaceholderEmail()
+  // wherever this is shown to a human.
+  email: string
   name: string
   is_admin: boolean // legacy flag, kept for backward-compat; true only for super_admin
   role: Role
@@ -24,8 +27,8 @@ export type JwtPayload = {
 
 export type User = {
   id: number
-  email: string | null
-  password_hash: string | null
+  email: string
+  password_hash: string
   name: string
   phone: string | null
   is_admin: number

@@ -4,6 +4,7 @@ import { api, apiErrorMessage } from '../../lib/api'
 import type { AdminUser } from '../../lib/types'
 import { Spinner } from '../../components/Spinner'
 import { Badge } from '../../components/Badge'
+import { displayEmail } from '../../lib/sns'
 
 export function AdminUsers() {
   const [users, setUsers] = useState<AdminUser[] | null>(null)
@@ -37,7 +38,7 @@ export function AdminUsers() {
           {users.map((u) => (
             <tr key={u.id} className="border-t border-neutral-100">
               <td className="px-4 py-3 font-medium">{u.name}</td>
-              <td className="px-4 py-3">{u.email || '-'}</td>
+              <td className="px-4 py-3">{displayEmail(u.email)}</td>
               <td className="px-4 py-3">{u.phone || '-'}</td>
               <td className="px-4 py-3">
                 {u.auth_provider === 'kakao' ? (

@@ -7,6 +7,8 @@ import { ShowroomList } from './pages/ShowroomList'
 import { ShowroomDetail } from './pages/ShowroomDetail'
 import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
+import { AuthCallback } from './pages/AuthCallback'
+import { CompleteProfile } from './pages/CompleteProfile'
 import { MyReservations } from './pages/MyReservations'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { AdminReservations } from './pages/admin/AdminReservations'
@@ -42,6 +44,15 @@ function App() {
           <Route path="showrooms/:id" element={<ShowroomDetail />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="auth/callback" element={<AuthCallback />} />
+          <Route
+            path="complete-profile"
+            element={
+              <ProtectedRoute>
+                <CompleteProfile />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="my"
             element={

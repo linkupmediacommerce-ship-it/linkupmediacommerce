@@ -176,7 +176,7 @@ admin.delete('/reservations/:id', async (c) => {
 // GET /api/admin/users - list all members
 admin.get('/users', requireSuperAdmin, async (c) => {
   const { results } = await c.env.DB.prepare(
-    `SELECT u.id, u.email, u.name, u.phone, u.is_admin, u.role, u.brand_id, u.created_at,
+    `SELECT u.id, u.email, u.name, u.phone, u.is_admin, u.role, u.brand_id, u.auth_provider, u.created_at,
       (SELECT COUNT(*) FROM reservations r WHERE r.user_id = u.id AND r.status = 'confirmed') AS reservation_count
      FROM users u ORDER BY u.created_at DESC`
   ).all()
@@ -188,7 +188,7 @@ admin.get('/users', requireSuperAdmin, async (c) => {
 admin.get('/users/:id', requireSuperAdmin, async (c) => {
   const id = c.req.param('id')
   const user = await c.env.DB.prepare(
-    'SELECT id, email, name, phone, is_admin, role, brand_id, created_at FROM users WHERE id = ?'
+    'SELECT id, email, name, phone, is_admin, role, brand_id, auth_provider, created_at FROM users WHERE id = ?'
   )
     .bind(id)
     .first()

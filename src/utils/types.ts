@@ -1,14 +1,20 @@
 export type Bindings = {
   DB: D1Database
   JWT_SECRET?: string
+  KAKAO_CLIENT_ID?: string
+  KAKAO_CLIENT_SECRET?: string
+  KAKAO_REDIRECT_URI?: string
 }
 
 // role: 'user' (regular member) | 'brand_admin' (scoped to brand_id) | 'super_admin' (platform-wide)
 export type Role = 'user' | 'brand_admin' | 'super_admin'
 
+// auth_provider: 'local' (email+password signup) | 'kakao' | 'naver' | 'google' (SNS login)
+export type AuthProvider = 'local' | 'kakao' | 'naver' | 'google'
+
 export type JwtPayload = {
   sub: number // user id
-  email: string
+  email: string | null
   name: string
   is_admin: boolean // legacy flag, kept for backward-compat; true only for super_admin
   role: Role
@@ -18,13 +24,15 @@ export type JwtPayload = {
 
 export type User = {
   id: number
-  email: string
-  password_hash: string
+  email: string | null
+  password_hash: string | null
   name: string
   phone: string | null
   is_admin: number
   role: Role
   brand_id: number | null
+  auth_provider: AuthProvider
+  provider_user_id: string | null
   created_at: string
 }
 

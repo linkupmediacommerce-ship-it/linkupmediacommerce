@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
@@ -10,6 +10,16 @@ export function Login() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const next = searchParams.get('next')
+  const oauthError = searchParams.get('error')
+  const shownError = useRef(false)
+
+  useEffect(() => {
+    if (oauthError && !shownError.current) {
+      shownError.current = true
+      toast(oauthError, 'error')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [oauthError])
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -70,6 +80,21 @@ export function Login() {
             회원가입
           </Link>
         </p>
+
+        <div className="flex items-center gap-3 pt-2">
+          <div className="flex-1 border-t border-neutral-100" />
+          <span className="text-xs text-neutral-400">또는</span>
+          <div className="flex-1 border-t border-neutral-100" />
+        </div>
+
+        <a
+          href="/api/auth/kakao/login"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-medium bg-[#FEE500] text-[#191919] hover:brightness-95 transition"
+        >
+          <i className="fa-solid fa-comment" />
+          카카오로 로그인
+        </a>
+
         <p className="text-center text-xs text-neutral-400 pt-2 border-t border-neutral-100">
           테스트 계정: user@brooks.com / user1234
           <br />

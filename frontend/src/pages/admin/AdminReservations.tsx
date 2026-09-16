@@ -123,7 +123,7 @@ export function AdminReservations() {
                   <td className="px-4 py-3">
                     {r.user_name}
                     <br />
-                    <span className="text-xs text-neutral-400">{r.user_email}</span>
+                    <span className="text-xs text-neutral-400">{r.user_email || '-'}</span>
                   </td>
                   <td className="px-4 py-3">{r.user_phone || '-'}</td>
                   <td className="px-4 py-3 max-w-[220px]">

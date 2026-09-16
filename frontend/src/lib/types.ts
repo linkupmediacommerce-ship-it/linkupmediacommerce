@@ -1,13 +1,16 @@
 export type Role = 'user' | 'brand_admin' | 'super_admin'
 
+export type AuthProvider = 'local' | 'kakao' | 'naver' | 'google'
+
 export type User = {
   id: number
-  email: string
+  email: string | null
   name: string
   phone: string | null
   is_admin: boolean
   role: Role
   brand_id: number | null
+  auth_provider: AuthProvider
 }
 
 export type Brand = {
@@ -72,7 +75,7 @@ export type AdminReservation = {
   created_at: string
   user_id: number
   user_name: string
-  user_email: string
+  user_email: string | null
   user_phone: string | null
   showroom_id: number
   showroom_name: string
@@ -83,12 +86,13 @@ export type AdminReservation = {
 
 export type AdminUser = {
   id: number
-  email: string
+  email: string | null
   name: string
   phone: string | null
   is_admin: boolean
   role: Role
   brand_id: number | null
+  auth_provider: AuthProvider
   created_at: string
   reservation_count: number
 }

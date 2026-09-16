@@ -7,6 +7,8 @@ type AuthContextValue = {
   loading: boolean
   login: (email: string, password: string) => Promise<User>
   signup: (name: string, email: string, phone: string, password: string) => Promise<User>
+  loginWithToken: (token: string) => Promise<User>
+  refreshUser: () => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -52,6 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res.data.user as User
   }, [])
 
+  // Used by the Kakao (and later Naver/Google) OAuth callback page: the backend
+  // already minted our JWT after the SNS round-trip, we just need to store it
+  // and fetch the profile, mirroring what login()/signup() do.
+  const loginWithToken = useCallback(async (token: string) => {
+    setToken(token)
+    const res = await api.get('/auth/me')
+    setUser(res.data.user)
+    return res.data.user as User
+  }, [])
+
   const logout = useCallback(async () => {
     try {
       await api.post('/auth/logout')
@@ -63,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, loginWithToken, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   )

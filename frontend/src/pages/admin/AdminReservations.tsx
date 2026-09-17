@@ -6,6 +6,7 @@ import { Badge } from '../../components/Badge'
 import { formatDateLabel } from '../../lib/date'
 import { useToast } from '../../context/ToastContext'
 import { displayEmail } from '../../lib/sns'
+import { formatPhone } from '../../lib/phone'
 
 export function AdminReservations() {
   const toast = useToast()
@@ -126,7 +127,7 @@ export function AdminReservations() {
                     <br />
                     <span className="text-xs text-neutral-400">{displayEmail(r.user_email)}</span>
                   </td>
-                  <td className="px-4 py-3">{r.user_phone || '-'}</td>
+                  <td className="px-4 py-3">{formatPhone(r.user_phone)}</td>
                   <td className="px-4 py-3 max-w-[220px]">
                     <span className="text-neutral-600 whitespace-pre-wrap break-words">
                       {r.memo || <span className="text-neutral-300">-</span>}

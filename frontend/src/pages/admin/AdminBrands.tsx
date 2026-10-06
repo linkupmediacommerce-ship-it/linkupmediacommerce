@@ -152,15 +152,15 @@ export function AdminBrands() {
       )}
 
       <div className="overflow-x-auto bg-white border border-neutral-200 rounded-xl">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[640px] text-sm">
           <thead className="bg-neutral-50 text-neutral-500 text-left">
             <tr>
-              <th className="px-4 py-3">슬러그</th>
-              <th className="px-4 py-3">브랜드명</th>
-              <th className="px-4 py-3">설명</th>
-              <th className="px-4 py-3">이벤트 수</th>
-              <th className="px-4 py-3">상태</th>
-              <th className="px-4 py-3">관리</th>
+              <th className="px-4 py-3 whitespace-nowrap">슬러그</th>
+              <th className="px-4 py-3 whitespace-nowrap">브랜드명</th>
+              <th className="px-4 py-3 whitespace-nowrap">설명</th>
+              <th className="px-4 py-3 whitespace-nowrap">이벤트 수</th>
+              <th className="px-4 py-3 whitespace-nowrap">상태</th>
+              <th className="px-4 py-3 whitespace-nowrap">관리</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100">
@@ -173,16 +173,16 @@ export function AdminBrands() {
             ) : (
               brands.map((b) => (
                 <tr key={b.id}>
-                  <td className="px-4 py-3 font-mono text-neutral-500">{b.slug}</td>
-                  <td className="px-4 py-3 font-medium">{b.name}</td>
+                  <td className="px-4 py-3 font-mono text-neutral-500 whitespace-nowrap">{b.slug}</td>
+                  <td className="px-4 py-3 font-medium whitespace-nowrap">{b.name}</td>
                   <td className="px-4 py-3 text-neutral-500 max-w-[260px] whitespace-pre-wrap break-words">
                     {b.description || '-'}
                   </td>
-                  <td className="px-4 py-3">{b.showroom_count ?? 0}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">{b.showroom_count ?? 0}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {b.is_active ? <Badge variant="confirmed">활성</Badge> : <Badge variant="cancelled">비활성</Badge>}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <button
                       onClick={() => handleToggleActive(b)}
                       className="text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 hover:bg-neutral-100"

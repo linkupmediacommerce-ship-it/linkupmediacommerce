@@ -96,16 +96,16 @@ export function AdminReservations() {
       </div>
 
       <div className="overflow-x-auto bg-white border border-neutral-200 rounded-xl">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[760px] text-sm">
           <thead className="bg-neutral-50 text-neutral-500 text-left">
             <tr>
-              <th className="px-4 py-3">지점</th>
-              <th className="px-4 py-3">일시</th>
-              <th className="px-4 py-3">예약자</th>
-              <th className="px-4 py-3">연락처</th>
-              <th className="px-4 py-3">메모</th>
-              <th className="px-4 py-3">상태</th>
-              <th className="px-4 py-3">관리</th>
+              <th className="px-4 py-3 whitespace-nowrap">지점</th>
+              <th className="px-4 py-3 whitespace-nowrap">일시</th>
+              <th className="px-4 py-3 whitespace-nowrap">예약자</th>
+              <th className="px-4 py-3 whitespace-nowrap">연락처</th>
+              <th className="px-4 py-3 whitespace-nowrap">메모</th>
+              <th className="px-4 py-3 whitespace-nowrap">상태</th>
+              <th className="px-4 py-3 whitespace-nowrap">관리</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100">
@@ -118,27 +118,27 @@ export function AdminReservations() {
             ) : (
               reservations.map((r) => (
                 <tr key={r.id}>
-                  <td className="px-4 py-3">{r.showroom_name}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">{r.showroom_name}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {formatDateLabel(r.slot_date)} {r.start_time}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {r.user_name}
                     <br />
                     <span className="text-xs text-neutral-400">{displayEmail(r.user_email)}</span>
                   </td>
-                  <td className="px-4 py-3">{formatPhone(r.user_phone)}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">{formatPhone(r.user_phone)}</td>
                   <td className="px-4 py-3 max-w-[220px]">
                     <span className="text-neutral-600 whitespace-pre-wrap break-words">
                       {r.memo || <span className="text-neutral-300">-</span>}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <Badge variant={r.status === 'confirmed' ? 'confirmed' : 'cancelled'}>
                       {r.status === 'confirmed' ? '예약확정' : '취소됨'}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex gap-1.5">
                       {r.status === 'confirmed' ? (
                         <button

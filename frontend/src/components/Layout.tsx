@@ -16,36 +16,37 @@ export function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/showrooms" className="flex items-center gap-2">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center">
+          <Link to="/showrooms" className="flex items-center shrink-0">
             <span className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900">all4run</span>
           </Link>
-          <nav className="flex items-center gap-3 text-sm font-medium">
-            <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">이벤트 목록</Link>
+          <nav className="flex items-center gap-0.5 sm:gap-2 text-sm font-medium ml-3 sm:ml-8">
+            <Link to="/showrooms" className="px-2 py-2 sm:px-3 rounded-lg hover:bg-neutral-100 transition">이벤트 목록</Link>
+            {user?.role === 'user' && (
+              <Link to="/my" className="px-2 py-2 sm:px-3 rounded-lg hover:bg-neutral-100 transition">내 예약</Link>
+            )}
+            {user && (user.role === 'super_admin' || user.role === 'brand_admin') && (
+              <Link to="/admin" className="px-2 py-2 sm:px-3 rounded-lg hover:bg-neutral-100 transition text-amber-700">관리자</Link>
+            )}
+          </nav>
+          <div className="flex items-center gap-1.5 sm:gap-3 text-sm font-medium ml-auto pl-2">
             {user ? (
               <>
-                {user.role === 'user' && (
-                  <Link to="/my" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">내 예약</Link>
-                )}
-                {(user.role === 'super_admin' || user.role === 'brand_admin') && (
-                  <Link to="/admin" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition text-amber-700">관리자</Link>
-                )}
-                <span className="text-neutral-400 mx-1">|</span>
                 <span className="text-neutral-600 hidden sm:inline">{user.name}님</span>
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-2 rounded-lg border border-neutral-200 hover:bg-neutral-100 transition"
+                  className="px-2.5 py-2 sm:px-3 rounded-lg border border-neutral-200 hover:bg-neutral-100 transition whitespace-nowrap"
                 >
                   로그아웃
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">로그인</Link>
-                <Link to="/signup" className="px-3 py-2 rounded-lg bg-neutral-900 text-white hover:bg-neutral-700 transition">회원가입</Link>
+                <Link to="/login" className="px-2.5 py-2 sm:px-3 rounded-lg hover:bg-neutral-100 transition whitespace-nowrap">로그인</Link>
+                <Link to="/signup" className="px-2.5 py-2 sm:px-3 rounded-lg bg-neutral-900 text-white hover:bg-neutral-700 transition whitespace-nowrap">회원가입</Link>
               </>
             )}
-          </nav>
+          </div>
         </div>
       </header>
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-8">

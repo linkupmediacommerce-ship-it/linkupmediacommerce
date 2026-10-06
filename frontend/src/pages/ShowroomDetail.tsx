@@ -158,7 +158,7 @@ export function ShowroomDetail() {
                     >
                       <span>{s.start_time}</span>
                       <span className={`text-[10px] ${isSelected ? 'text-amber-100' : 'text-neutral-400'}`}>
-                        {s.remaining}/{s.capacity}명
+                        {s.reserved_count}/{s.capacity}명
                       </span>
                     </button>
                   )

@@ -99,8 +99,6 @@ export function Login() {
           테스트 계정: user@brooks.com / user1234
           <br />
           최고관리자: admin@all4run.co.kr / admin1234
-          <br />
-          브랜드관리자(BROOKS): brooks@all4run.co.kr / brooks1234
         </p>
       </form>
     </div>

@@ -18,18 +18,18 @@ export function AdminLayout() {
       <p className="text-neutral-500 mb-4">
         {isSuperAdmin ? '전체 브랜드의 예약, 회원, 이벤트를 관리합니다.' : '내 브랜드의 예약과 이벤트를 관리합니다.'}
       </p>
-      <div className="flex gap-2 mb-6 border-b border-neutral-200">
+      <div className="flex gap-1 sm:gap-2 mb-6 border-b border-neutral-200 overflow-x-auto no-scrollbar">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
-              `px-4 py-3 text-sm font-medium border-b-2 -mb-px transition ${
+              `shrink-0 whitespace-nowrap px-3 py-3 sm:px-4 text-xs sm:text-sm font-medium border-b-2 -mb-px transition ${
                 isActive ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-400 hover:text-neutral-700'
               }`
             }
           >
-            <i className={`fa-solid ${tab.icon} mr-1.5`} />
+            <i className={`fa-solid ${tab.icon} mr-1 sm:mr-1.5`} />
             {tab.label}
           </NavLink>
         ))}

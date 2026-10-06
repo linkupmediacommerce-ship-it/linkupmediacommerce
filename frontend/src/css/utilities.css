@@ -6,3 +6,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Hides the scrollbar while keeping horizontal scroll usable (e.g. admin tab bar on mobile) */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

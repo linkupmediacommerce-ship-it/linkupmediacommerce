@@ -29,7 +29,7 @@ showrooms.get('/:id', async (c) => {
     .bind(id)
     .first()
   if (!showroom) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
   return c.json({ showroom })
 })
@@ -47,7 +47,7 @@ showrooms.get('/:id/slots', async (c) => {
     .bind(id)
     .first()
   if (!showroom) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
 
   let query = `

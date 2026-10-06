@@ -12,7 +12,7 @@ export function ShowroomList() {
     api
       .get('/showrooms')
       .then((res) => setShowrooms(res.data.showrooms))
-      .catch((e) => setError(apiErrorMessage(e, '쇼룸 목록을 불러오지 못했습니다.')))
+      .catch((e) => setError(apiErrorMessage(e, '이벤트 목록을 불러오지 못했습니다.')))
   }, [])
 
   if (error) return <p className="text-center text-red-500 py-24">{error}</p>
@@ -21,12 +21,12 @@ export function ShowroomList() {
   return (
     <div className="fade-in">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">쇼룸 예약</h1>
-        <p className="text-neutral-500">방문하실 브랜드 쇼룸을 선택해주세요.</p>
+        <h1 className="text-3xl font-bold mb-2">이벤트 예약</h1>
+        <p className="text-neutral-500">방문하실 브랜드 이벤트를 선택해주세요.</p>
       </div>
 
       {showrooms.length === 0 ? (
-        <p className="text-neutral-400 text-center py-16">등록된 쇼룸이 없습니다.</p>
+        <p className="text-neutral-400 text-center py-16">등록된 이벤트가 없습니다.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {showrooms.map((s, index) => (

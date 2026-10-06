@@ -384,10 +384,10 @@ admin.patch('/showrooms/:id', async (c) => {
 
   const brandId = await getShowroomBrandId(c, id)
   if (brandId === null) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
   if (user.role === 'brand_admin' && brandId !== user.brand_id) {
-    return c.json({ error: '해당 쇼룸을 관리할 권한이 없습니다.' }, 403)
+    return c.json({ error: '해당 이벤트를 관리할 권한이 없습니다.' }, 403)
   }
 
   const updates: string[] = []
@@ -414,10 +414,10 @@ admin.delete('/showrooms/:id', async (c) => {
 
   const brandId = await getShowroomBrandId(c, id)
   if (brandId === null) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
   if (user.role === 'brand_admin' && brandId !== user.brand_id) {
-    return c.json({ error: '해당 쇼룸을 관리할 권한이 없습니다.' }, 403)
+    return c.json({ error: '해당 이벤트를 관리할 권한이 없습니다.' }, 403)
   }
 
   const activeReservation = await c.env.DB.prepare(
@@ -427,7 +427,7 @@ admin.delete('/showrooms/:id', async (c) => {
     .first()
   if (activeReservation) {
     return c.json(
-      { error: '예약이 존재하는 쇼룸은 삭제할 수 없습니다. 먼저 예약을 취소하거나 비활성화해주세요.' },
+      { error: '예약이 존재하는 이벤트는 삭제할 수 없습니다. 먼저 예약을 취소하거나 비활성화해주세요.' },
       409
     )
   }
@@ -461,7 +461,7 @@ admin.post('/showrooms/:id/reorder', requireSuperAdmin, async (c) => {
 
   const index = ids.indexOf(id)
   if (index === -1) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
 
   if (action === 'top') {
@@ -499,10 +499,10 @@ admin.get('/showrooms/:id/slots', async (c) => {
 
   const brandId = await getShowroomBrandId(c, id)
   if (brandId === null) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
   if (user.role === 'brand_admin' && brandId !== user.brand_id) {
-    return c.json({ error: '해당 쇼룸을 관리할 권한이 없습니다.' }, 403)
+    return c.json({ error: '해당 이벤트를 관리할 권한이 없습니다.' }, 403)
   }
 
   const { results } = await c.env.DB.prepare(
@@ -525,10 +525,10 @@ admin.post('/showrooms/:id/slots', async (c) => {
 
   const brandId = await getShowroomBrandId(c, showroomId)
   if (brandId === null) {
-    return c.json({ error: '쇼룸을 찾을 수 없습니다.' }, 404)
+    return c.json({ error: '이벤트를 찾을 수 없습니다.' }, 404)
   }
   if (user.role === 'brand_admin' && brandId !== user.brand_id) {
-    return c.json({ error: '해당 쇼룸을 관리할 권한이 없습니다.' }, 403)
+    return c.json({ error: '해당 이벤트를 관리할 권한이 없습니다.' }, 403)
   }
 
   if (!body.slot_date || !body.start_time) {

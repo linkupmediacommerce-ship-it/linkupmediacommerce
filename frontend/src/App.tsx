@@ -21,7 +21,7 @@ function NotFound() {
     <div className="text-center py-24">
       <p className="text-2xl font-bold mb-2">페이지를 찾을 수 없습니다</p>
       <a href="#/showrooms" className="text-amber-600 hover:underline">
-        쇼룸 목록으로 이동
+        이벤트 목록으로 이동
       </a>
     </div>
   )

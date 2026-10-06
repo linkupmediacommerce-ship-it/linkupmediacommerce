@@ -21,7 +21,7 @@ export function Layout() {
             <span className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900">all4run</span>
           </Link>
           <nav className="flex items-center gap-3 text-sm font-medium">
-            <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">쇼룸 목록</Link>
+            <Link to="/showrooms" className="px-3 py-2 rounded-lg hover:bg-neutral-100 transition">이벤트 목록</Link>
             {user ? (
               <>
                 {user.role === 'user' && (

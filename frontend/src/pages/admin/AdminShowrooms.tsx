@@ -22,7 +22,7 @@ export function AdminShowrooms() {
     api
       .get('/admin/showrooms')
       .then((res) => setShowrooms(res.data.showrooms))
-      .catch((e) => setError(apiErrorMessage(e, '쇼룸 정보를 불러오지 못했습니다.')))
+      .catch((e) => setError(apiErrorMessage(e, '이벤트 정보를 불러오지 못했습니다.')))
   }, [])
 
   useEffect(() => {
@@ -40,10 +40,10 @@ export function AdminShowrooms() {
   }
 
   async function handleDelete(s: Showroom) {
-    if (!confirm(`'${s.name}' 쇼룸을 완전히 삭제하시겠습니까?\n예약이 있는 경우 삭제할 수 없습니다.`)) return
+    if (!confirm(`'${s.name}' 이벤트를 완전히 삭제하시겠습니까?\n예약이 있는 경우 삭제할 수 없습니다.`)) return
     try {
       await api.delete(`/admin/showrooms/${s.id}`)
-      toast('쇼룸이 삭제되었습니다.', 'success')
+      toast('이벤트가 삭제되었습니다.', 'success')
       load()
     } catch (e) {
       toast(apiErrorMessage(e, '삭제에 실패했습니다.'), 'error')
@@ -70,7 +70,7 @@ export function AdminShowrooms() {
           className="px-4 py-2 rounded-lg text-sm bg-neutral-900 text-white hover:bg-neutral-700 transition"
         >
           <i className="fa-solid fa-plus mr-1" />
-          새 쇼룸 추가
+          새 이벤트 추가
         </button>
       </div>
 

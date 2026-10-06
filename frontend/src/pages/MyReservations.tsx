@@ -45,7 +45,7 @@ export function MyReservations() {
         <p className="text-neutral-400 text-center py-16">
           예약 내역이 없습니다.!{' '}
           <Link to="/showrooms" className="text-amber-600 hover:underline">
-            쇼룸 예약하러 가기
+            이벤트 예약하러 가기
           </Link>
         </p>
       ) : (

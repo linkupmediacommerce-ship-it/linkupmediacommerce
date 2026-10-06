@@ -8,7 +8,7 @@ export function AdminLayout() {
   const tabs = [
     { to: '/admin/reservations', label: '예약 관리', icon: 'fa-calendar-check' },
     ...(isSuperAdmin ? [{ to: '/admin/users', label: '회원 관리', icon: 'fa-users' }] : []),
-    { to: '/admin/showrooms', label: '쇼룸 관리', icon: 'fa-store' },
+    { to: '/admin/showrooms', label: '이벤트 관리', icon: 'fa-store' },
     ...(isSuperAdmin ? [{ to: '/admin/brands', label: '브랜드 관리', icon: 'fa-building' }] : [])
   ]
 
@@ -16,7 +16,7 @@ export function AdminLayout() {
     <div className="fade-in">
       <h1 className="text-2xl font-bold mb-2">관리자 페이지</h1>
       <p className="text-neutral-500 mb-4">
-        {isSuperAdmin ? '전체 브랜드의 예약, 회원, 쇼룸을 관리합니다.' : '내 브랜드의 예약과 쇼룸을 관리합니다.'}
+        {isSuperAdmin ? '전체 브랜드의 예약, 회원, 이벤트를 관리합니다.' : '내 브랜드의 예약과 이벤트를 관리합니다.'}
       </p>
       <div className="flex gap-2 mb-6 border-b border-neutral-200">
         {tabs.map((tab) => (

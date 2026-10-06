@@ -36,7 +36,7 @@ export function ShowroomDetail() {
         const dates = [...new Set(fetchedSlots.map((s) => s.slot_date))].sort()
         setSelectedDate(dates[0] ?? null)
       })
-      .catch((e) => setError(apiErrorMessage(e, '쇼룸 정보를 불러오지 못했습니다.')))
+      .catch((e) => setError(apiErrorMessage(e, '이벤트 정보를 불러오지 못했습니다.')))
   }, [id])
 
   const dates = useMemo(() => [...new Set(slots.map((s) => s.slot_date))].sort(), [slots])

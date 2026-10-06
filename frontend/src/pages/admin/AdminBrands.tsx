@@ -158,7 +158,7 @@ export function AdminBrands() {
               <th className="px-4 py-3">슬러그</th>
               <th className="px-4 py-3">브랜드명</th>
               <th className="px-4 py-3">설명</th>
-              <th className="px-4 py-3">쇼룸수</th>
+              <th className="px-4 py-3">이벤트 수</th>
               <th className="px-4 py-3">상태</th>
               <th className="px-4 py-3">관리</th>
             </tr>
